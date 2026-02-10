@@ -2,6 +2,9 @@
 
 一个基于 React + Express + Prisma 的 AI 热点检测工具，支持通过 OpenRouter、GitHub API 和 Twitter API 获取和分析热点内容。
 
+<img width="2496" height="1270" alt="image" src="https://github.com/user-attachments/assets/e6dbf036-f5e2-4caa-bc7c-f4e0cf4acbba" />
+
+
 ## 功能特性
 
 ### 仪表盘
