@@ -20,7 +20,7 @@ dist/
 # Database
 *.db
 *.db-journal
-prisma/migrations/
+/backend/prisma/migrations/
 
 # IDE
 .vscode/
