@@ -1,0 +1,28 @@
+{
+  "name": "ai-hotspot-backend",
+  "version": "1.0.0",
+  "description": "AI Hotspot Detection Tool Backend",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "keywords": ["ai", "hotspot", "detection"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "@prisma/client": "^5.22.0",
+    "axios": "^1.7.9",
+    "openai": "^4.76.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "prisma": "^5.22.0"
+  }
+}

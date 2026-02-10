@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Keyword {
+  id        String   @id @default(uuid())
+  keyword   String   @unique
+  isActive  Boolean  @default(true)
+  source    String   // OpenRouter/GitHub/Twitter/Both
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  hotspots  Hotspot[]
+
+  @@map("keywords")
+}
+
+model Hotspot {
+  id              String       @id @default(uuid())
+  title           String
+  content         String?
+  source          String       // OpenRouter/GitHub/Twitter
+  sourceUrl       String?
+  relevanceScore  Float        @default(0)
+  matchedKeywords String?      // JSON string of matched keywords
+  publishedAt     DateTime?
+  views           Int          @default(0)
+  likes           Int          @default(0)
+  createdAt       DateTime     @default(now())
+  keywords        Keyword[]
+  notifications   Notification[]
+
+  @@map("hotspots")
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  hotspotId String
+  hotspot   Hotspot  @relation(fields: [hotspotId], references: [id])
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
+
+model CheckHistory {
+  id             String   @id @default(uuid())
+  status         String   // success/failure
+  message        String?
+  keywordsChecked Int     @default(0)
+  hotspotsFound  Int     @default(0)
+  createdAt      DateTime @default(now())
+
+  @@map("check_histories")
+}
