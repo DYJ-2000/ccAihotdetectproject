@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import { TrendingUp, Hash, Bell, Activity, ExternalLink, Eye, Heart, Info } from 'lucide-react'
@@ -11,9 +11,18 @@ export default function Dashboard() {
   const [stats, setStats] = useState(null)
   const [latestHotspots, setLatestHotspots] = useState([])
   const [loading, setLoading] = useState(true)
+  const [totalHotspots, setTotalHotspots] = useState(0)
+  const intervalRef = useRef(null)
 
   useEffect(() => {
     fetchData()
+    startPolling()
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
   }, [])
 
   const fetchData = async () => {
@@ -29,11 +38,25 @@ export default function Dashboard() {
 
       setStats(statsData)
       setLatestHotspots(hotspotsData)
+      setTotalHotspots(statsData.totalHotspots)
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error)
     } finally {
       setLoading(false)
     }
+  }
+
+  const startPolling = () => {
+    // 每30秒轮询一次热点数量
+    intervalRef.current = setInterval(async () => {
+      try {
+        const res = await fetch('/api/hotspots/statistics')
+        const data = await res.json()
+        setTotalHotspots(data.totalHotspots)
+      } catch (error) {
+        console.error('Failed to poll hotspots count:', error)
+      }
+    }, 30000)
   }
 
   if (loading) {
@@ -62,25 +85,26 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="总热点数"
-          value={stats?.totalHotspots || 0}
+          value={totalHotspots}
           icon={<TrendingUp className="text-blue-600" />}
           color="bg-blue-50"
+          isLive={true}
         />
         <StatCard
           title="活跃关键词"
-          value={stats?.activeKeywords || 0}
+          value={stats?.activeKeywords }
           icon={<Hash className="text-green-600" />}
           color="bg-green-50"
         />
         <StatCard
           title="未读通知"
-          value={stats?.unreadNotifications || 0}
+          value={stats?.unreadNotifications }
           icon={<Bell className="text-purple-600" />}
           color="bg-purple-50"
         />
         <StatCard
           title="24小时热点"
-          value={stats?.recentHotspots || 0}
+          value={stats?.recentHotspots }
           icon={<Activity className="text-orange-500" />}
           color="bg-orange-50"
         />
@@ -124,7 +148,7 @@ export default function Dashboard() {
   )
 }
 
-function StatCard({ title, value, icon, color }) {
+function StatCard({ title, value, icon, color, isLive = false }) {
   return (
     <div className={`${color} p-6 rounded-lg`}>
       <div className="flex items-center justify-between">
@@ -133,6 +157,11 @@ function StatCard({ title, value, icon, color }) {
           <p className="text-3xl font-bold">{value}</p>
         </div>
         {icon}
+        {isLive && (
+          <div className="absolute top-2 right-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -8,31 +8,31 @@ datasource db {
 }
 
 model Keyword {
-  id        String   @id @default(uuid())
-  keyword   String   @unique
-  isActive  Boolean  @default(true)
-  source    String   // OpenRouter/GitHub/Twitter/Both
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  hotspots  Hotspot[]
+  id        String    @id @default(uuid())
+  keyword   String    @unique
+  isActive  Boolean   @default(true)
+  source    String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  hotspots  Hotspot[] @relation("HotspotToKeyword")
 
   @@map("keywords")
 }
 
 model Hotspot {
-  id              String       @id @default(uuid())
+  id              String         @id @default(uuid())
   title           String
   content         String?
-  source          String       // OpenRouter/GitHub/Twitter
+  source          String
   sourceUrl       String?
-  relevanceScore  Float        @default(0)
-  matchedKeywords String?      // JSON string of matched keywords
+  relevanceScore  Float          @default(0)
+  matchedKeywords String?
   publishedAt     DateTime?
-  views           Int          @default(0)
-  likes           Int          @default(0)
-  createdAt       DateTime     @default(now())
-  keywords        Keyword[]
+  views           Int            @default(0)
+  likes           Int            @default(0)
+  createdAt       DateTime       @default(now())
   notifications   Notification[]
+  keywords        Keyword[]      @relation("HotspotToKeyword")
 
   @@map("hotspots")
 }
@@ -40,20 +40,20 @@ model Hotspot {
 model Notification {
   id        String   @id @default(uuid())
   hotspotId String
-  hotspot   Hotspot  @relation(fields: [hotspotId], references: [id])
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
+  hotspot   Hotspot  @relation(fields: [hotspotId], references: [id])
 
   @@map("notifications")
 }
 
 model CheckHistory {
-  id             String   @id @default(uuid())
-  status         String   // success/failure
-  message        String?
-  keywordsChecked Int     @default(0)
-  hotspotsFound  Int     @default(0)
-  createdAt      DateTime @default(now())
+  id              String   @id @default(uuid())
+  status          String
+  message         String?
+  keywordsChecked Int      @default(0)
+  hotspotsFound   Int      @default(0)
+  createdAt       DateTime @default(now())
 
   @@map("check_histories")
 }

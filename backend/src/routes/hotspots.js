@@ -4,6 +4,23 @@ const router = express.Router();
 
 const prisma = new PrismaClient();
 
+router.get('/test', (req, res) => {
+  res.send('hotspots router works')
+})
+
+// Get statistics
+router.get('/statistics', async (req, res) => {
+
+  try {
+    const hotspotService = require('../services/hotspotService');
+    const stats = await hotspotService.getStatistics();
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 // Get all hotspots with pagination
 router.get('/', async (req, res) => {
   try {
@@ -58,6 +75,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // Get latest hotspots (for dashboard)
 router.get('/dashboard/latest', async (req, res) => {
