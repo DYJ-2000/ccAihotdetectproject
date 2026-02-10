@@ -13,7 +13,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [totalHotspots, setTotalHotspots] = useState(0)
   const intervalRef = useRef(null)
-
+// Fetch statistics and latest hotspots on mount
   useEffect(() => {
     fetchData()
     startPolling()
