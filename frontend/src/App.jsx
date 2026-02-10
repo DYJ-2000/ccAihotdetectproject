@@ -71,15 +71,15 @@ function App() {
 
         <div className="flex items-center space-x-4">
           {/* 主题切换按钮 */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 hover:bg-gray-100 rounded-full"
-            title={isDarkMode ? '切换到日间模式' : '切换到夜间模式'}
-          >
-            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-
           <div className="relative">
+            <button
+              onClick={toggleTheme}
+              className="p-2 hover:bg-gray-100 rounded-full "
+              title={isDarkMode ? '切换到日间模式' : '切换到夜间模式'}
+            >
+              {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
+            </button>
+
             <button
               onClick={() => setShowNotifications(!showNotifications)}
               className="p-2 hover:bg-gray-100 rounded-full relative"
